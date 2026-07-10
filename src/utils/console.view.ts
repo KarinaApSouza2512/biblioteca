@@ -1,7 +1,7 @@
-import { BaseException } from '../errors/base.exception'
-import { defer } from '../utils/common.util'
-import { LoggerUtil } from '../utils/logger.util'
-import { ReadlineInterfaceUtil } from '../utils/readline-interface.util'
+import { BaseException } from './base.exception'
+import { defer } from './common.util'
+import { LoggerUtil } from './logger.util'
+import { ReadlineInterfaceUtil } from './readline-interface.util'
 
 export type ConsoleFormSchema = Record<string, InteractiveFormKey>
 

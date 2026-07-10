@@ -1,4 +1,4 @@
-import { BaseException } from '../errors/base.exception'
+import { BaseException } from './base.exception'
 
 export function parseJSON<T>(
   json: unknown,

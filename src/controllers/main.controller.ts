@@ -1,9 +1,9 @@
 import { CreateUserDto } from './dto/create-user-form.dto'
-import { ConsoleView } from '../@common/view/console.view'
-import { CreateUserUseCase } from '../usecase/create-user.uc'
+import { CreateUserService } from '../services/create-user.service'
+import { ConsoleView } from '../utils/console.view'
 
-export class MainView extends ConsoleView {
-  constructor(private readonly createUserUc: CreateUserUseCase) {
+export class MainController extends ConsoleView {
+  constructor(private readonly createUserService: CreateUserService) {
     super(true)
   }
 
@@ -20,7 +20,7 @@ export class MainView extends ConsoleView {
       CreateUserDto
     )
 
-    const userOrError = await this.createUserUc
+    const userOrError = await this.createUserService
       .execute(createUserDto)
       .catch((error: unknown) => error as Error)
 

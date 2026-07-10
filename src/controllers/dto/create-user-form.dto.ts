@@ -1,4 +1,4 @@
-import { ConsoleFormSchema } from '../../@common/view/console.view'
+import { ConsoleFormSchema } from '../../utils/console.view'
 
 export class CreateUserDto {
   constructor(

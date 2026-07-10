@@ -2,9 +2,14 @@
   "name": "biblioteca-cli",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
-    "start:dev": "tsc && tsx --watch main.ts",
+    "dev": "tsx --watch src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "db:migrate": "tsx src/database/migrate.ts",
+    "db:check": "tsx src/database/check.ts",
+    "db:create-test-user": "tsx src/scripts/create-test-user.ts",
     "lint": "eslint ."
   },
   "keywords": [],

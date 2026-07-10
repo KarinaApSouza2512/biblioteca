@@ -1,16 +1,16 @@
 import 'dotenv/config'
-import { initDatabase, pool } from '../@common/database/database'
-import { UserRepository } from '../repositories/user.repository'
-import { CreateUserUseCase } from '../usecase/create-user.uc'
-import { MainView } from '../view/main.view'
+import { MainController } from './controllers/main.controller'
+import { initDatabase, pool } from './database/database'
+import { UserRepository } from './repositories/user.repository'
+import { CreateUserService } from './services/create-user.service'
 
 async function bootstrap() {
   await initDatabase()
 
-  const createUserUc = new CreateUserUseCase(new UserRepository(pool))
-  const mainView = new MainView(createUserUc)
+  const createUserService = new CreateUserService(new UserRepository(pool))
+  const mainController = new MainController(createUserService)
 
-  await mainView.start()
+  await mainController.start()
 }
 
 bootstrap()

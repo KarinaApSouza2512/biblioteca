@@ -1,8 +1,8 @@
-import { Usuario } from '../model/user'
+import { CreateUserDto } from '../controllers/dto/create-user-form.dto'
+import { Usuario } from '../models/user'
 import { UserRepository } from '../repositories/user.repository'
-import { CreateUserDto } from '../view/dto/create-user-form.dto'
 
-export class CreateUserUseCase {
+export class CreateUserService {
   constructor(private readonly repository: UserRepository) {}
 
   async execute(user: CreateUserDto): Promise<Usuario> {

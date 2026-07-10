@@ -1,7 +1,3 @@
-/**  | Error
-  | string
-  | Record<string | number | symbol, unknown>
-  | Record<string | number | symbol, unknown>[] */
 export type ErrorCause = unknown
 
 export interface BaseExceptionConstructorOptions {
@@ -10,12 +6,6 @@ export interface BaseExceptionConstructorOptions {
   messagePrefix?: string
 }
 
-/**
- * Base exception class
- *
- * This class is meant to be used as an Error class for all other exceptions.
- *
- */
 export class BaseException extends Error {
   protected code?: string
 
