@@ -158,6 +158,25 @@ export abstract class ConsoleView {
     this.display(userMessage)
   }
 
+  /**
+   * Report an error that may be a domain outcome (plain `Error`, safe to show
+   * as-is) or a technical failure (`BaseException`, wraps internals and must
+   * go through `reportTechnicalError` instead of being displayed directly).
+   */
+  protected reportError(error: unknown): void {
+    if (error instanceof BaseException) {
+      this.reportTechnicalError(error)
+      return
+    }
+
+    if (error instanceof Error) {
+      this.display(error.message)
+      return
+    }
+
+    this.reportTechnicalError(error)
+  }
+
   protected showError(message: string | Error): void {
     LoggerUtil.error(message)
   }

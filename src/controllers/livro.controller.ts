@@ -1,18 +1,18 @@
-import { CreateClienteDto } from './dto/create-cliente-form.dto'
-import { ClienteService } from '../services/cliente.service'
+import { CreateLivroDto } from './dto/create-livro-form.dto'
+import { LivroService } from '../services/livro.service'
 import { ConsoleView } from '../utils/console.view'
 
-export class ClienteController extends ConsoleView {
-  constructor(private readonly clienteService: ClienteService) {
+export class LivroController extends ConsoleView {
+  constructor(private readonly livroService: LivroService) {
     super(false)
   }
 
   protected async update(): Promise<void> {
-    this.display('---- Gerenciar Clientes ----')
-    this.display('1 - Cadastrar cliente')
-    this.display('2 - Listar clientes')
-    this.display('3 - Atualizar cliente')
-    this.display('4 - Excluir cliente')
+    this.display('---- Gerenciar Livros ----')
+    this.display('1 - Cadastrar livro')
+    this.display('2 - Listar livros')
+    this.display('3 - Atualizar livro')
+    this.display('4 - Excluir livro')
     this.display('0 - Voltar')
     this.display('')
 
@@ -45,44 +45,44 @@ export class ClienteController extends ConsoleView {
 
   private async handleCreate(): Promise<void> {
     const dto = await this.promptInteractiveForm(
-      'Informe os dados do cliente',
-      CreateClienteDto.schema(),
-      CreateClienteDto
+      'Informe os dados do livro',
+      CreateLivroDto.schema(),
+      CreateLivroDto
     )
 
-    const clienteOrError = await this.clienteService
+    const livroOrError = await this.livroService
       .create(dto)
       .catch((error: unknown) => error as Error)
 
-    if (clienteOrError instanceof Error) {
-      this.reportError(clienteOrError)
+    if (livroOrError instanceof Error) {
+      this.reportError(livroOrError)
       await this.prompt('Pressione ENTER para continuar...')
       return
     }
 
     this.display(
-      `Cliente "${clienteOrError.nome}" cadastrado com sucesso! (ID: ${String(clienteOrError.id)})`
+      `Livro "${livroOrError.titulo}" cadastrado com sucesso! (ID: ${String(livroOrError.id)})`
     )
     await this.prompt('Pressione ENTER para continuar...')
   }
 
   private async handleList(): Promise<void> {
-    const clientes = await this.clienteService
+    const livros = await this.livroService
       .findAll()
       .catch((error: unknown) => error as Error)
 
-    if (clientes instanceof Error) {
-      this.reportError(clientes)
+    if (livros instanceof Error) {
+      this.reportError(livros)
       await this.prompt('Pressione ENTER para continuar...')
       return
     }
 
-    if (clientes.length === 0) {
-      this.display('Nenhum cliente cadastrado.')
+    if (livros.length === 0) {
+      this.display('Nenhum livro cadastrado.')
     } else {
-      for (const cliente of clientes) {
+      for (const livro of livros) {
         this.display(
-          `#${String(cliente.id)} - ${cliente.nome} | CPF: ${cliente.cpf} | E-mail: ${cliente.email ?? '-'} | Telefone: ${cliente.telefone ?? '-'}`
+          `#${String(livro.id)} - ${livro.titulo} | Autor: #${String(livro.autor_id)} | ISBN: ${livro.isbn ?? '-'} | Ano: ${livro.ano_publicacao ? String(livro.ano_publicacao) : '-'} | Gênero: ${livro.genero ?? '-'} | Estoque: ${String(livro.quantidade_estoque)}`
         )
       }
     }
@@ -91,10 +91,10 @@ export class ClienteController extends ConsoleView {
   }
 
   private async handleUpdate(): Promise<void> {
-    const id = await this.promptId('Informe o ID do cliente a atualizar: ')
+    const id = await this.promptId('Informe o ID do livro a atualizar: ')
     if (id === null) return
 
-    const existing = await this.clienteService
+    const existing = await this.livroService
       .findById(id)
       .catch((error: unknown) => error as Error)
 
@@ -105,18 +105,18 @@ export class ClienteController extends ConsoleView {
     }
 
     if (!existing) {
-      this.display('Cliente não encontrado.')
+      this.display('Livro não encontrado.')
       await this.prompt('Pressione ENTER para continuar...')
       return
     }
 
     const dto = await this.promptInteractiveForm(
-      `Atualize os dados do cliente #${String(existing.id)}`,
-      CreateClienteDto.schema(),
-      CreateClienteDto
+      `Atualize os dados do livro #${String(existing.id)}`,
+      CreateLivroDto.schema(),
+      CreateLivroDto
     )
 
-    const updatedOrError = await this.clienteService
+    const updatedOrError = await this.livroService
       .update(id, dto)
       .catch((error: unknown) => error as Error)
 
@@ -126,17 +126,15 @@ export class ClienteController extends ConsoleView {
       return
     }
 
-    this.display(
-      `Cliente #${String(updatedOrError.id)} atualizado com sucesso!`
-    )
+    this.display(`Livro #${String(updatedOrError.id)} atualizado com sucesso!`)
     await this.prompt('Pressione ENTER para continuar...')
   }
 
   private async handleDelete(): Promise<void> {
-    const id = await this.promptId('Informe o ID do cliente a excluir: ')
+    const id = await this.promptId('Informe o ID do livro a excluir: ')
     if (id === null) return
 
-    const deletedOrError = await this.clienteService
+    const deletedOrError = await this.livroService
       .delete(id)
       .catch((error: unknown) => error as Error)
 
@@ -147,9 +145,7 @@ export class ClienteController extends ConsoleView {
     }
 
     this.display(
-      deletedOrError
-        ? 'Cliente excluído com sucesso!'
-        : 'Cliente não encontrado.'
+      deletedOrError ? 'Livro excluído com sucesso!' : 'Livro não encontrado.'
     )
     await this.prompt('Pressione ENTER para continuar...')
   }

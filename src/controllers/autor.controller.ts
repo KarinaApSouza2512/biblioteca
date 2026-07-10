@@ -55,7 +55,7 @@ export class AutorController extends ConsoleView {
       .catch((error: unknown) => error as Error)
 
     if (autorOrError instanceof Error) {
-      this.reportTechnicalError(autorOrError)
+      this.reportError(autorOrError)
       await this.prompt('Pressione ENTER para continuar...')
       return
     }
@@ -72,7 +72,7 @@ export class AutorController extends ConsoleView {
       .catch((error: unknown) => error as Error)
 
     if (autores instanceof Error) {
-      this.reportTechnicalError(autores)
+      this.reportError(autores)
       await this.prompt('Pressione ENTER para continuar...')
       return
     }
@@ -99,7 +99,7 @@ export class AutorController extends ConsoleView {
       .catch((error: unknown) => error as Error)
 
     if (existing instanceof Error) {
-      this.reportTechnicalError(existing)
+      this.reportError(existing)
       await this.prompt('Pressione ENTER para continuar...')
       return
     }
@@ -121,7 +121,7 @@ export class AutorController extends ConsoleView {
       .catch((error: unknown) => error as Error)
 
     if (updatedOrError instanceof Error) {
-      this.reportTechnicalError(updatedOrError)
+      this.reportError(updatedOrError)
       await this.prompt('Pressione ENTER para continuar...')
       return
     }
@@ -139,7 +139,7 @@ export class AutorController extends ConsoleView {
       .catch((error: unknown) => error as Error)
 
     if (deletedOrError instanceof Error) {
-      this.reportTechnicalError(deletedOrError)
+      this.reportError(deletedOrError)
       await this.prompt('Pressione ENTER para continuar...')
       return
     }

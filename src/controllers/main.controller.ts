@@ -1,6 +1,8 @@
 import { AutorController } from './autor.controller'
 import { ClienteController } from './cliente.controller'
 import { CreateUserDto } from './dto/create-user-form.dto'
+import { EmprestimoController } from './emprestimo.controller'
+import { LivroController } from './livro.controller'
 import { CreateUserService } from '../services/create-user.service'
 import { ConsoleView } from '../utils/console.view'
 
@@ -8,7 +10,9 @@ export class MainController extends ConsoleView {
   constructor(
     private readonly createUserService: CreateUserService,
     private readonly autorController: AutorController,
-    private readonly clienteController: ClienteController
+    private readonly clienteController: ClienteController,
+    private readonly livroController: LivroController,
+    private readonly emprestimoController: EmprestimoController
   ) {
     super(true)
   }
@@ -21,7 +25,9 @@ export class MainController extends ConsoleView {
     this.display('')
     this.display('1 - Gerenciar Autores')
     this.display('2 - Gerenciar Clientes')
-    this.display('3 - Cadastrar novo usuário do sistema')
+    this.display('3 - Gerenciar Livros')
+    this.display('4 - Gerenciar Empréstimos')
+    this.display('5 - Cadastrar novo usuário do sistema')
     this.display('0 - Sair')
     this.display('')
 
@@ -37,6 +43,14 @@ export class MainController extends ConsoleView {
         return
       }
       case '3': {
+        await this.livroController.start()
+        return
+      }
+      case '4': {
+        await this.emprestimoController.start()
+        return
+      }
+      case '5': {
         await this.handleCreateUser()
         return
       }
@@ -60,7 +74,7 @@ export class MainController extends ConsoleView {
       .catch((error: unknown) => error as Error)
 
     if (userOrError instanceof Error) {
-      this.reportTechnicalError(userOrError)
+      this.reportError(userOrError)
       await this.prompt('Pressione ENTER para continuar...')
       return
     }
