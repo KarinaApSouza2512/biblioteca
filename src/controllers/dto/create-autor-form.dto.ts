@@ -1,6 +1,6 @@
 import { ConsoleFormSchema } from '../../utils/console.view'
 
-export class CreateAuthorDto {
+export class CreateAutorDto {
   constructor(
     public nome: string,
     public nacionalidade: string | null,

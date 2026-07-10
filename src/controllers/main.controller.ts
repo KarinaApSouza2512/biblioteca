@@ -1,4 +1,5 @@
-import { AuthorController } from './author.controller'
+import { AutorController } from './autor.controller'
+import { ClienteController } from './cliente.controller'
 import { CreateUserDto } from './dto/create-user-form.dto'
 import { CreateUserService } from '../services/create-user.service'
 import { ConsoleView } from '../utils/console.view'
@@ -6,7 +7,8 @@ import { ConsoleView } from '../utils/console.view'
 export class MainController extends ConsoleView {
   constructor(
     private readonly createUserService: CreateUserService,
-    private readonly authorController: AuthorController
+    private readonly autorController: AutorController,
+    private readonly clienteController: ClienteController
   ) {
     super(true)
   }
@@ -18,7 +20,8 @@ export class MainController extends ConsoleView {
     this.display('========================================')
     this.display('')
     this.display('1 - Gerenciar Autores')
-    this.display('2 - Cadastrar novo usuário do sistema')
+    this.display('2 - Gerenciar Clientes')
+    this.display('3 - Cadastrar novo usuário do sistema')
     this.display('0 - Sair')
     this.display('')
 
@@ -26,10 +29,14 @@ export class MainController extends ConsoleView {
 
     switch (option) {
       case '1': {
-        await this.authorController.start()
+        await this.autorController.start()
         return
       }
       case '2': {
+        await this.clienteController.start()
+        return
+      }
+      case '3': {
         await this.handleCreateUser()
         return
       }

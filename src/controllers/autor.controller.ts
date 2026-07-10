@@ -1,9 +1,9 @@
-import { CreateAuthorDto } from './dto/create-author-form.dto'
-import { AuthorService } from '../services/author.service'
+import { CreateAutorDto } from './dto/create-autor-form.dto'
+import { AutorService } from '../services/autor.service'
 import { ConsoleView } from '../utils/console.view'
 
-export class AuthorController extends ConsoleView {
-  constructor(private readonly authorService: AuthorService) {
+export class AutorController extends ConsoleView {
+  constructor(private readonly autorService: AutorService) {
     super(false)
   }
 
@@ -46,43 +46,43 @@ export class AuthorController extends ConsoleView {
   private async handleCreate(): Promise<void> {
     const dto = await this.promptInteractiveForm(
       'Informe os dados do autor',
-      CreateAuthorDto.schema(),
-      CreateAuthorDto
+      CreateAutorDto.schema(),
+      CreateAutorDto
     )
 
-    const authorOrError = await this.authorService
+    const autorOrError = await this.autorService
       .create(dto)
       .catch((error: unknown) => error as Error)
 
-    if (authorOrError instanceof Error) {
-      this.reportTechnicalError(authorOrError)
+    if (autorOrError instanceof Error) {
+      this.reportTechnicalError(autorOrError)
       await this.prompt('Pressione ENTER para continuar...')
       return
     }
 
     this.display(
-      `Autor "${authorOrError.nome}" cadastrado com sucesso! (ID: ${String(authorOrError.id)})`
+      `Autor "${autorOrError.nome}" cadastrado com sucesso! (ID: ${String(autorOrError.id)})`
     )
     await this.prompt('Pressione ENTER para continuar...')
   }
 
   private async handleList(): Promise<void> {
-    const authors = await this.authorService
+    const autores = await this.autorService
       .findAll()
       .catch((error: unknown) => error as Error)
 
-    if (authors instanceof Error) {
-      this.reportTechnicalError(authors)
+    if (autores instanceof Error) {
+      this.reportTechnicalError(autores)
       await this.prompt('Pressione ENTER para continuar...')
       return
     }
 
-    if (authors.length === 0) {
+    if (autores.length === 0) {
       this.display('Nenhum autor cadastrado.')
     } else {
-      for (const author of authors) {
+      for (const autor of autores) {
         this.display(
-          `#${String(author.id)} - ${author.nome} | Nacionalidade: ${author.nacionalidade ?? '-'} | Nascimento: ${author.data_nascimento ?? '-'}`
+          `#${String(autor.id)} - ${autor.nome} | Nacionalidade: ${autor.nacionalidade ?? '-'} | Nascimento: ${autor.data_nascimento ?? '-'}`
         )
       }
     }
@@ -94,7 +94,7 @@ export class AuthorController extends ConsoleView {
     const id = await this.promptId('Informe o ID do autor a atualizar: ')
     if (id === null) return
 
-    const existing = await this.authorService
+    const existing = await this.autorService
       .findById(id)
       .catch((error: unknown) => error as Error)
 
@@ -112,11 +112,11 @@ export class AuthorController extends ConsoleView {
 
     const dto = await this.promptInteractiveForm(
       `Atualize os dados do autor #${String(existing.id)}`,
-      CreateAuthorDto.schema(),
-      CreateAuthorDto
+      CreateAutorDto.schema(),
+      CreateAutorDto
     )
 
-    const updatedOrError = await this.authorService
+    const updatedOrError = await this.autorService
       .update(id, dto)
       .catch((error: unknown) => error as Error)
 
@@ -134,7 +134,7 @@ export class AuthorController extends ConsoleView {
     const id = await this.promptId('Informe o ID do autor a excluir: ')
     if (id === null) return
 
-    const deletedOrError = await this.authorService
+    const deletedOrError = await this.autorService
       .delete(id)
       .catch((error: unknown) => error as Error)
 
