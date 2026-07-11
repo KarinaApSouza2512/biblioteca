@@ -8,7 +8,9 @@ async function checkDatabase(): Promise<void> {
   const database = process.env.DB_NAME ?? '(undefined)'
   const user = process.env.DB_USER ?? '(undefined)'
 
-  console.log(`Verificando conexao com PostgreSQL em ${host}:${port}...`)
+  console.log(
+    `Verificando conexao com PostgreSQL em ${host}:${String(port)}...`
+  )
 
   await pool.query('SELECT 1')
 

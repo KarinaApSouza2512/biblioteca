@@ -3,6 +3,7 @@ import { ClienteController } from './cliente.controller'
 import { CreateUserDto } from './dto/create-user-form.dto'
 import { EmprestimoController } from './emprestimo.controller'
 import { LivroController } from './livro.controller'
+import { RelatorioController } from './relatorio.controller'
 import { CreateUserService } from '../services/create-user.service'
 import { ConsoleView } from '../utils/console.view'
 
@@ -10,9 +11,10 @@ export class MainController extends ConsoleView {
   constructor(
     private readonly createUserService: CreateUserService,
     private readonly autorController: AutorController,
-    private readonly clienteController: ClienteController,
     private readonly livroController: LivroController,
-    private readonly emprestimoController: EmprestimoController
+    private readonly clienteController: ClienteController,
+    private readonly emprestimoController: EmprestimoController,
+    private readonly relatorioController: RelatorioController
   ) {
     super(true)
   }
@@ -24,11 +26,12 @@ export class MainController extends ConsoleView {
     this.display('========================================')
     this.display('')
     this.display('1 - Gerenciar Autores')
-    this.display('2 - Gerenciar Clientes')
-    this.display('3 - Gerenciar Livros')
+    this.display('2 - Gerenciar Livros')
+    this.display('3 - Gerenciar Clientes')
     this.display('4 - Gerenciar Empréstimos')
-    this.display('5 - Cadastrar novo usuário do sistema')
-    this.display('0 - Sair')
+    this.display('5 - Relatórios')
+    this.display('6 - Cadastrar novo usuário do sistema')
+    this.display('0 - Encerrar aplicação')
     this.display('')
 
     const option = await this.prompt('Escolha uma opção: ')
@@ -39,11 +42,11 @@ export class MainController extends ConsoleView {
         return
       }
       case '2': {
-        await this.clienteController.start()
+        await this.livroController.start()
         return
       }
       case '3': {
-        await this.livroController.start()
+        await this.clienteController.start()
         return
       }
       case '4': {
@@ -51,6 +54,10 @@ export class MainController extends ConsoleView {
         return
       }
       case '5': {
+        await this.relatorioController.start()
+        return
+      }
+      case '6': {
         await this.handleCreateUser()
         return
       }

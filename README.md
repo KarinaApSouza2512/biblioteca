@@ -1,7 +1,19 @@
 # Biblioteca CLI
 
-Aplicacao de linha de comando para cadastro de usuarios e operacoes de biblioteca,
-escrita em Node.js + TypeScript com PostgreSQL.
+Aplicacao de linha de comando para gestao de biblioteca, escrita em Node.js + TypeScript com PostgreSQL.
+
+Este projeto foi desenvolvido como projeto final avaliativo do Curso: SCTEC - Desenvolvedor Back-End Node.
+Turma: QA DBEN 2026/1 1.
+Aluna: Karina Aparecida de Souza.
+
+## Funcionalidades
+
+- Cadastro e consulta de autores
+- Cadastro e consulta de livros
+- Cadastro e consulta de clientes
+- Registro de emprestimos e devolucoes
+- Relatorios operacionais (livros disponiveis, emprestados, ranking e clientes com emprestimos ativos)
+- Cadastro de usuario de sistema para acesso ao menu CLI
 
 ## Pre-requisitos
 
@@ -33,6 +45,16 @@ DB_PORT=5432
 DB_NAME=sctec
 DB_PASSWORD=password123
 ```
+
+## Scripts disponiveis
+
+- `npm run dev`: inicia em modo desenvolvimento com watch
+- `npm run build`: compila TypeScript para `dist/`
+- `npm run start`: executa a versao compilada
+- `npm run db:migrate`: aplica schema SQL
+- `npm run db:check`: valida conexao com banco e existencia da tabela `usuario`
+- `npm run db:create-test-user`: cria usuario de teste sem interacao
+- `npm run lint`: executa regras de lint
 
 ## Banco de dados
 
@@ -74,6 +96,8 @@ Executar build:
 npm run start
 ```
 
+Ao iniciar, o menu principal permite navegar entre os modulos de Autores, Livros, Clientes, Emprestimos, Relatorios e Cadastro de Usuario.
+
 ## Qualidade de codigo
 
 Executar lint:
@@ -101,3 +125,24 @@ npm run dev
 - src/repositories/: acesso ao PostgreSQL
 - src/models/: contratos de dominio
 - src/utils/: utilitarios compartilhados
+
+## Troubleshooting rapido
+
+- Erro `ECONNREFUSED`:
+  - Verifique se o PostgreSQL esta rodando em `DB_HOST:DB_PORT`
+  - Execute `npm run db:check`
+
+- Erro de role inexistente (exemplo: `role "admin" does not exist`):
+  - Ajuste `DB_USER`/`DB_PASSWORD` no `.env` para um usuario valido do PostgreSQL
+
+- Erro de tabela inexistente (exemplo: `relation "usuario" does not exist`):
+  - Execute `npm run db:migrate`
+
+## Arquivos locais que nao devem ser versionados
+
+- `.env`
+- `.idea/`
+- `dist/`
+- `node_modules/`
+
+Esses caminhos ja estao no `.gitignore`.

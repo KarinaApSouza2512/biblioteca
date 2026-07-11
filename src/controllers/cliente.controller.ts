@@ -80,6 +80,9 @@ export class ClienteController extends ConsoleView {
     if (clientes.length === 0) {
       this.display('Nenhum cliente cadastrado.')
     } else {
+      this.display(`Total de clientes cadastrados: ${String(clientes.length)}`)
+      this.display('Observação: IDs podem ter lacunas após exclusões.')
+
       for (const cliente of clientes) {
         this.display(
           `#${String(cliente.id)} - ${cliente.nome} | CPF: ${cliente.cpf} | E-mail: ${cliente.email ?? '-'} | Telefone: ${cliente.telefone ?? '-'}`
