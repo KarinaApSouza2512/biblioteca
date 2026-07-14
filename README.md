@@ -1,41 +1,63 @@
 # Biblioteca CLI
 
-Aplicacao de linha de comando para gestao de biblioteca, escrita em Node.js + TypeScript com PostgreSQL.
+Aplicacao de linha de comando para gestao de biblioteca, desenvolvida com Node.js, TypeScript e PostgreSQL.
 
-Este projeto foi desenvolvido como projeto final avaliativo do Curso: SCTEC - Desenvolvedor Back-End Node.
-Turma: QA DBEN 2026/1 1.
-Aluna: Karina Aparecida de Souza.
+> Projeto final avaliativo do curso SCTEC - Desenvolvedor Back-End Node.
+>
+> Turma: QA DBEN 2026/1 1  
+> Aluna: Karina Aparecida de Souza
 
-## Funcionalidades
+## Visao Geral
+
+O sistema foi criado para demonstrar operacoes essenciais de uma biblioteca em ambiente de terminal, com foco em organizacao por camadas, persistencia em banco relacional e fluxo de uso simples para apresentacao.
+
+### Funcionalidades
 
 - Cadastro e consulta de autores
 - Cadastro e consulta de livros
 - Cadastro e consulta de clientes
 - Registro de emprestimos e devolucoes
-- Relatorios operacionais (livros disponiveis, emprestados, ranking e clientes com emprestimos ativos)
-- Cadastro de usuario de sistema para acesso ao menu CLI
+- Relatorios operacionais
+- Cadastro de usuarios do sistema
+
+### Relatorios disponiveis
+
+- Livros disponiveis
+- Livros emprestados atualmente
+- Quantidade de livros por autor
+- Quantidade de emprestimos por livro
+- Clientes com emprestimos ativos
+
+## Tecnologias
+
+- Node.js
+- TypeScript
+- PostgreSQL
+- pg
+- dotenv
+- ESLint
 
 ## Pre-requisitos
 
-- Node.js 18+
-- npm 9+
-- PostgreSQL rodando localmente (padrao: localhost:5432)
+- Node.js 18 ou superior
+- npm 9 ou superior
+- PostgreSQL rodando localmente em `localhost:5432`
 
-## Configuracao inicial
+## Configuracao do ambiente
 
-1. Instale dependencias:
+1. Instale as dependencias:
 
 ```bash
 npm install
 ```
 
-2. Crie seu arquivo de ambiente:
+2. Crie o arquivo de ambiente:
 
 ```bash
 cp .env.example .env
 ```
 
-3. Ajuste os valores no arquivo .env:
+3. Configure o `.env`:
 
 ```env
 DEBUG=true
@@ -46,112 +68,125 @@ DB_NAME=sctec
 DB_PASSWORD=password123
 ```
 
-## Scripts disponiveis
+## Fluxo rapido para apresentar
 
-- `npm run dev`: inicia em modo desenvolvimento com watch
-- `npm run build`: compila TypeScript para `dist/`
-- `npm run start`: executa a versao compilada
-- `npm run db:migrate`: aplica schema SQL
-- `npm run db:seed`: limpa e popula o banco com dados de demonstracao
-- `npm run db:check`: valida conexao com banco e existencia da tabela `usuario`
-- `npm run db:create-test-user`: cria usuario de teste sem interacao
-- `npm run lint`: executa regras de lint
-
-## Banco de dados
-
-Aplicar schema:
-
-```bash
-npm run db:migrate
-```
-
-Popular banco com dados de demonstracao para apresentacao:
-
-```bash
-npm run db:seed
-```
-
-Observacao: o seed limpa os dados atuais das tabelas de dominio e recria um conjunto padrao de dados.
-
-Validar conexao e tabela obrigatoria (usuario):
-
-```bash
-npm run db:check
-```
-
-Criar usuario de teste sem interacao (opcional):
-
-```bash
-npm run db:create-test-user
-```
-
-## Rodando a aplicacao
-
-Modo desenvolvimento (watch):
-
-```bash
-npm run dev
-```
-
-Build de producao:
-
-```bash
-npm run build
-```
-
-Executar build:
-
-```bash
-npm run start
-```
-
-Ao iniciar, o menu principal permite navegar entre os modulos de Autores, Livros, Clientes, Emprestimos, Relatorios e Cadastro de Usuario.
-
-## Qualidade de codigo
-
-Executar lint:
-
-```bash
-npm run lint
-```
-
-## Fluxo rapido recomendado
+Use esta sequencia para deixar o projeto pronto para demonstracao:
 
 ```bash
 npm install
 cp .env.example .env
 npm run db:migrate
+npm run db:seed
 npm run db:check
 npm run dev
 ```
 
-## Estrutura principal
+## Scripts disponiveis
 
-- src/main.ts: bootstrap da aplicacao
-- src/database/: conexao, migracao e healthcheck
-- src/controllers/: fluxo CLI
-- src/services/: regras de negocio
-- src/repositories/: acesso ao PostgreSQL
-- src/models/: contratos de dominio
-- src/utils/: utilitarios compartilhados
+| Comando                       | Descricao                                                     |
+| ----------------------------- | ------------------------------------------------------------- |
+| `npm run dev`                 | Inicia a aplicacao em modo desenvolvimento com watch          |
+| `npm run build`               | Compila o projeto para `dist/`                                |
+| `npm run start`               | Executa a versao compilada                                    |
+| `npm run db:migrate`          | Aplica o schema SQL no banco                                  |
+| `npm run db:seed`             | Limpa e popula o banco com dados de demonstracao              |
+| `npm run db:check`            | Verifica conexao com o banco e existencia da tabela `usuario` |
+| `npm run db:create-test-user` | Cria um usuario de teste sem interacao                        |
+| `npm run lint`                | Executa as validacoes de lint                                 |
 
-## Troubleshooting rapido
+## Banco de dados
 
-- Erro `ECONNREFUSED`:
-  - Verifique se o PostgreSQL esta rodando em `DB_HOST:DB_PORT`
-  - Execute `npm run db:check`
+### Aplicar schema
 
-- Erro de role inexistente (exemplo: `role "admin" does not exist`):
-  - Ajuste `DB_USER`/`DB_PASSWORD` no `.env` para um usuario valido do PostgreSQL
+```bash
+npm run db:migrate
+```
 
-- Erro de tabela inexistente (exemplo: `relation "usuario" does not exist`):
-  - Execute `npm run db:migrate`
+### Popular com dados de demonstracao
 
-## Arquivos locais que nao devem ser versionados
+```bash
+npm run db:seed
+```
+
+O seed recria os dados de dominio e deixa o sistema pronto para navegacao e relatarios.
+
+### Verificar conexao
+
+```bash
+npm run db:check
+```
+
+### Criar usuario de teste adicional
+
+```bash
+npm run db:create-test-user
+```
+
+## Execucao da aplicacao
+
+### Desenvolvimento
+
+```bash
+npm run dev
+```
+
+### Build de producao
+
+```bash
+npm run build
+```
+
+### Executar versao compilada
+
+```bash
+npm run start
+```
+
+Ao iniciar, o menu principal permite acessar os modulos de autores, livros, clientes, emprestimos, relatorios e usuarios.
+
+## Estrutura do projeto
+
+```text
+src/
+  controllers/   fluxos da CLI
+  database/      conexao, migracao, seed e healthcheck
+  models/        contratos e tipos de dominio
+  repositories/  acesso ao PostgreSQL
+  services/      regras de negocio
+  utils/         utilitarios compartilhados
+```
+
+## Qualidade de codigo
+
+```bash
+npm run lint
+```
+
+## Troubleshooting
+
+### Erro `ECONNREFUSED`
+
+- Verifique se o PostgreSQL esta rodando em `DB_HOST:DB_PORT`
+- Execute `npm run db:check`
+
+### Erro de role inexistente
+
+Exemplo: `role "admin" does not exist`
+
+- Ajuste `DB_USER` e `DB_PASSWORD` no `.env`
+- Verifique se a role existe no PostgreSQL local
+
+### Erro de tabela inexistente
+
+Exemplo: `relation "usuario" does not exist`
+
+- Execute `npm run db:migrate`
+
+## Arquivos locais nao versionados
 
 - `.env`
 - `.idea/`
 - `dist/`
 - `node_modules/`
 
-Esses caminhos ja estao no `.gitignore`.
+Esses caminhos ja estao configurados no `.gitignore`.
