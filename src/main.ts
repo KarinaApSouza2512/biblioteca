@@ -31,7 +31,7 @@ async function bootstrap() {
   const clienteService = new ClienteService(clienteRepository)
   const livroService = new LivroService(livroRepository, autorRepository)
   const emprestimoService = new EmprestimoService(
-    new EmprestimoRepository(pool, livroRepository),
+    new EmprestimoRepository(pool),
     livroRepository,
     clienteRepository
   )
@@ -55,12 +55,7 @@ async function bootstrap() {
   await mainController.start()
 }
 
-bootstrap()
-  .then(() => {
-    process.exit(0)
-  })
-  .catch((e: unknown) => {
-    console.log('UNHANDLED REJECTION')
-    console.error(e)
-    process.exit(1)
-  })
+void bootstrap().catch((error: unknown) => {
+  console.error('Falha ao iniciar a aplicação:', error)
+  process.exit(1)
+})

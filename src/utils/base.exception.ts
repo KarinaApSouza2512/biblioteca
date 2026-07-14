@@ -41,20 +41,6 @@ export class BaseException extends Error {
     }
   }
 
-  static isError(error: unknown): error is BaseException {
-    return error instanceof BaseException
-  }
-
-  static fromError(
-    error: Error,
-    options?: Omit<BaseExceptionConstructorOptions, 'cause'>
-  ) {
-    return new BaseException({
-      cause: error,
-      ...options
-    })
-  }
-
   static fromUnknown(
     unknown: unknown,
     options?: Omit<BaseExceptionConstructorOptions, 'cause'>

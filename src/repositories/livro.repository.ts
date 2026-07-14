@@ -1,4 +1,4 @@
-import { Pool, PoolClient } from 'pg'
+import { Pool } from 'pg'
 
 import { Livro } from '../models/livro'
 import { BaseException } from '../utils/base.exception'
@@ -30,12 +30,9 @@ export class LivroRepository {
     }
   }
 
-  async findById(
-    id: number,
-    executor: Pool | PoolClient = this.pool
-  ): Promise<Livro | null> {
+  async findById(id: number): Promise<Livro | null> {
     try {
-      const { rows } = await executor.query<Livro>(
+      const { rows } = await this.pool.query<Livro>(
         'SELECT * FROM livros WHERE id = $1',
         [id]
       )
@@ -111,32 +108,6 @@ export class LivroRepository {
     } catch (error) {
       throw BaseException.fromUnknown(error, {
         messagePrefix: `Erro ao excluir livro #${String(id)}: `
-      })
-    }
-  }
-
-  async decrementarEstoque(id: number, executor: PoolClient): Promise<void> {
-    try {
-      await executor.query(
-        'UPDATE livros SET quantidade_estoque = quantidade_estoque - 1 WHERE id = $1',
-        [id]
-      )
-    } catch (error) {
-      throw BaseException.fromUnknown(error, {
-        messagePrefix: `Erro ao atualizar estoque do livro #${String(id)}: `
-      })
-    }
-  }
-
-  async incrementarEstoque(id: number, executor: PoolClient): Promise<void> {
-    try {
-      await executor.query(
-        'UPDATE livros SET quantidade_estoque = quantidade_estoque + 1 WHERE id = $1',
-        [id]
-      )
-    } catch (error) {
-      throw BaseException.fromUnknown(error, {
-        messagePrefix: `Erro ao atualizar estoque do livro #${String(id)}: `
       })
     }
   }

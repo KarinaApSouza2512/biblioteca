@@ -149,17 +149,4 @@ export class LivroController extends ConsoleView {
     )
     await this.prompt('Pressione ENTER para continuar...')
   }
-
-  private async promptId(message: string): Promise<number | null> {
-    const idInput = await this.prompt(message)
-    const id = Number(idInput)
-
-    if (Number.isNaN(id)) {
-      this.display('ID inválido!')
-      await this.prompt('Pressione ENTER para continuar...')
-      return null
-    }
-
-    return id
-  }
 }

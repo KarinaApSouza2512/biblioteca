@@ -52,6 +52,7 @@ DB_PASSWORD=password123
 - `npm run build`: compila TypeScript para `dist/`
 - `npm run start`: executa a versao compilada
 - `npm run db:migrate`: aplica schema SQL
+- `npm run db:seed`: limpa e popula o banco com dados de demonstracao
 - `npm run db:check`: valida conexao com banco e existencia da tabela `usuario`
 - `npm run db:create-test-user`: cria usuario de teste sem interacao
 - `npm run lint`: executa regras de lint
@@ -63,6 +64,14 @@ Aplicar schema:
 ```bash
 npm run db:migrate
 ```
+
+Popular banco com dados de demonstracao para apresentacao:
+
+```bash
+npm run db:seed
+```
+
+Observacao: o seed limpa os dados atuais das tabelas de dominio e recria um conjunto padrao de dados.
 
 Validar conexao e tabela obrigatoria (usuario):
 

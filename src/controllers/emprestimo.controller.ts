@@ -39,11 +39,35 @@ export class EmprestimoController extends ConsoleView {
   }
 
   private async handleRegistrar(): Promise<void> {
-    const dto = await this.promptInteractiveForm(
-      'Informe os dados do empréstimo',
-      CreateEmprestimoDto.schema(),
-      CreateEmprestimoDto
+    this.display('Informe os dados do empréstimo (digite 0 para cancelar).')
+
+    const livroId = await this.promptPositiveNumberOrCancel('livro_id: ')
+
+    if (livroId === null) {
+      this.display('Registro de empréstimo cancelado.')
+      await this.prompt('Pressione ENTER para continuar...')
+      return
+    }
+
+    const clienteId = await this.promptPositiveNumberOrCancel('cliente_id: ')
+
+    if (clienteId === null) {
+      this.display('Registro de empréstimo cancelado.')
+      await this.prompt('Pressione ENTER para continuar...')
+      return
+    }
+
+    const dataPrevista = await this.promptRequiredDateOrCancel(
+      'data_prevista_devolucao (YYYY-MM-DD): '
     )
+
+    if (dataPrevista === null) {
+      this.display('Registro de empréstimo cancelado.')
+      await this.prompt('Pressione ENTER para continuar...')
+      return
+    }
+
+    const dto = new CreateEmprestimoDto(livroId, clienteId, dataPrevista)
 
     const emprestimoOrError = await this.emprestimoService
       .registrar(dto)
@@ -59,6 +83,48 @@ export class EmprestimoController extends ConsoleView {
       `Empréstimo #${String(emprestimoOrError.id)} registrado com sucesso!`
     )
     await this.prompt('Pressione ENTER para continuar...')
+  }
+
+  private async promptPositiveNumberOrCancel(
+    message: string
+  ): Promise<number | null> {
+    for (;;) {
+      const input = (await this.prompt(message)).trim()
+
+      if (input === '0') {
+        return null
+      }
+
+      const value = Number(input)
+
+      if (Number.isNaN(value) || value <= 0 || !Number.isInteger(value)) {
+        this.display(
+          'Digite um número inteiro positivo válido ou 0 para voltar.'
+        )
+        continue
+      }
+
+      return value
+    }
+  }
+
+  private async promptRequiredDateOrCancel(
+    message: string
+  ): Promise<string | null> {
+    for (;;) {
+      const input = (await this.prompt(message)).trim()
+
+      if (input === '0') {
+        return null
+      }
+
+      if (!input) {
+        this.display('Campo obrigatório! Informe uma data ou 0 para voltar.')
+        continue
+      }
+
+      return input
+    }
   }
 
   private async handleList(): Promise<void> {
@@ -86,12 +152,9 @@ export class EmprestimoController extends ConsoleView {
   }
 
   private async handleDevolucao(): Promise<void> {
-    const idInput = await this.prompt('Informe o ID do empréstimo a devolver: ')
-    const id = Number(idInput)
+    const id = await this.promptId('Informe o ID do empréstimo a devolver: ')
 
-    if (Number.isNaN(id)) {
-      this.display('ID inválido!')
-      await this.prompt('Pressione ENTER para continuar...')
+    if (id === null) {
       return
     }
 

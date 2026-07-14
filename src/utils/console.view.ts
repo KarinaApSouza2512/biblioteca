@@ -12,11 +12,7 @@ interface InteractiveFormKey {
 }
 
 export abstract class ConsoleView {
-  protected static readonly ABORT_SENTINEL = '\x00ABORT'
-
   protected isInView = true
-
-  private aborted = false
 
   private readlineInterface = ReadlineInterfaceUtil.readlineInterface
 
@@ -24,7 +20,6 @@ export abstract class ConsoleView {
 
   private resetState(): void {
     this.isInView = true
-    this.aborted = false
   }
 
   private async promptUntilValid(prompt: string, schema: InteractiveFormKey) {
@@ -50,9 +45,14 @@ export abstract class ConsoleView {
       }
 
       if (schema.type === 'number') {
-        this.display('Digite um número válido! Tente novamente...')
         const n = Number(response)
-        return [!Number.isNaN(n), n]
+
+        if (Number.isNaN(n)) {
+          this.display('Digite um número válido! Tente novamente...')
+          return [false, null]
+        }
+
+        return [true, n]
       }
 
       if (
@@ -81,10 +81,6 @@ export abstract class ConsoleView {
   protected abstract update(): void | Promise<void>
 
   protected async prompt(message: string): Promise<string> {
-    if (this.aborted) {
-      return ConsoleView.ABORT_SENTINEL
-    }
-
     const controller = new AbortController()
 
     const onSigint = (): void => {
@@ -144,6 +140,19 @@ export abstract class ConsoleView {
     console.log(message)
   }
 
+  protected async promptId(message: string): Promise<number | null> {
+    const idInput = (await this.prompt(message)).trim()
+    const id = Number(idInput)
+
+    if (Number.isNaN(id) || !Number.isInteger(id) || id <= 0) {
+      this.display('ID inválido! Informe um número inteiro positivo.')
+      await this.prompt('Pressione ENTER para continuar...')
+      return null
+    }
+
+    return id
+  }
+
   /**
    * Report a *technical* failure: log the real error (stderr, for the dev) and
    * show the user a curated, non-leaking message. Never pass `error.message`
@@ -183,10 +192,6 @@ export abstract class ConsoleView {
 
   protected clear(): void {
     console.clear()
-  }
-
-  protected close(): void {
-    return void 0
   }
 
   protected onEnter(): void | Promise<void> {

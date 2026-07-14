@@ -1,6 +1,5 @@
 import { Pool } from 'pg'
 
-import { LivroRepository } from './livro.repository'
 import { Emprestimo } from '../models/emprestimo'
 import { BaseException } from '../utils/base.exception'
 
@@ -10,10 +9,7 @@ export type CreateEmprestimoInput = Pick<
 >
 
 export class EmprestimoRepository {
-  constructor(
-    private readonly pool: Pool,
-    private readonly livroRepository: LivroRepository
-  ) {}
+  constructor(private readonly pool: Pool) {}
 
   async findAll(): Promise<Emprestimo[]> {
     try {
@@ -29,26 +25,23 @@ export class EmprestimoRepository {
     }
   }
 
-  async findById(id: number): Promise<Emprestimo | null> {
-    try {
-      const { rows } = await this.pool.query<Emprestimo>(
-        'SELECT * FROM emprestimos WHERE id = $1',
-        [id]
-      )
-
-      return rows[0] ?? null
-    } catch (error) {
-      throw BaseException.fromUnknown(error, {
-        messagePrefix: `Erro ao buscar empréstimo #${String(id)}: `
-      })
-    }
-  }
-
   async create(data: CreateEmprestimoInput): Promise<Emprestimo> {
     const client = await this.pool.connect()
 
     try {
       await client.query('BEGIN')
+
+      const estoqueResult = await client.query<{ id: number }>(
+        `UPDATE livros
+         SET quantidade_estoque = quantidade_estoque - 1
+         WHERE id = $1 AND quantidade_estoque > 0
+         RETURNING id`,
+        [data.livro_id]
+      )
+
+      if (estoqueResult.rows.length === 0) {
+        throw new Error('Livro indisponível para empréstimo')
+      }
 
       const {
         rows: [emprestimo]
@@ -56,8 +49,6 @@ export class EmprestimoRepository {
         'INSERT INTO emprestimos (livro_id, cliente_id, data_prevista_devolucao) VALUES ($1, $2, $3) RETURNING *',
         [data.livro_id, data.cliente_id, data.data_prevista_devolucao]
       )
-
-      await this.livroRepository.decrementarEstoque(data.livro_id, client)
 
       await client.query('COMMIT')
 
@@ -93,7 +84,10 @@ export class EmprestimoRepository {
 
       const emprestimo = result.rows[0]
 
-      await this.livroRepository.incrementarEstoque(emprestimo.livro_id, client)
+      await client.query(
+        'UPDATE livros SET quantidade_estoque = quantidade_estoque + 1 WHERE id = $1',
+        [emprestimo.livro_id]
+      )
 
       await client.query('COMMIT')
 
